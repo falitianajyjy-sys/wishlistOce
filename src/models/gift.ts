@@ -13,7 +13,7 @@ export interface NewGift {
     name: string;
     emoji?: string;
     description?: string | null;
-    imageUrl?: string | null;
+    image?: { data: Buffer; type: string } | null;
 }
 
 export interface GuestGift {

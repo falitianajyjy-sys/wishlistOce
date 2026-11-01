@@ -12,6 +12,13 @@ export const giftController = {
         res.json(await giftService.listForGuest(req.query.me));
     }),
 
+    image: wrap(async (req, res) => {
+        const img = await giftService.getImage(req.params.id);
+        res.set('Content-Type', img.type);
+        res.set('Cache-Control', 'public, max-age=604800');
+        res.send(img.data);
+    }),
+
     claim: wrap(async (req, res) => {
         await giftService.claim(req.params.id, req.body?.token);
         res.json({ ok: true });
@@ -30,12 +37,12 @@ export const giftController = {
         res.status(201).json(await giftService.create(req.body ?? {}, req.file));
     }),
 
-    remove: wrap(async (req, res) => {
-        await giftService.remove(req.params.id);
-        res.json({ ok: true });
-    }),
     updateDescription: wrap(async (req, res) => {
         res.json(await giftService.updateDescription(req.params.id, req.body?.description));
     }),
 
+    remove: wrap(async (req, res) => {
+        await giftService.remove(req.params.id);
+        res.json({ ok: true });
+    }),
 };

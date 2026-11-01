@@ -1,7 +1,3 @@
-import fs from 'node:fs/promises';
-import path from 'node:path';
-
-import { UPLOAD_DIR } from '../config/uploads';
 import { AppError } from '../errors/AppError';
 import { AdminGift, GuestGift, NewGift } from '../models/gift';
 import { giftRepository } from '../repositories/giftRepository';
@@ -19,11 +15,6 @@ function checkId(id: unknown): number {
     return n;
 }
 
-async function removeFile(imageUrl: string | null | undefined) {
-    if (!imageUrl) return;
-    await fs.unlink(path.join(UPLOAD_DIR, path.basename(imageUrl))).catch(() => {});
-}
-
 export const giftService = {
     listForGuest(token: unknown): Promise<GuestGift[]> {
         return giftRepository.findVisibleForGuest(typeof token === 'string' ? token : '');
@@ -33,26 +24,34 @@ export const giftService = {
         return giftRepository.findAllForAdmin();
     },
 
+    async getImage(id: unknown): Promise<{ data: Buffer; type: string }> {
+        const image = await giftRepository.findImage(checkId(id));
+        if (!image) throw new AppError(404, 'Photo introuvable');
+        return image;
+    },
+
     async create(input: Partial<NewGift>, file?: Express.Multer.File): Promise<AdminGift> {
-        const imageUrl = file ? `/uploads/${file.filename}` : null;
-        try {
-            const name = String(input.name ?? '').trim();
-            if (!name) throw new AppError(400, 'Nom requis');
-            if (name.length > 120) throw new AppError(400, 'Nom trop long');
-            const description = input.description ? String(input.description).trim() : null;
-            if (description && description.length > 500) {
-                throw new AppError(400, 'Description trop longue');
-            }
-            return await giftRepository.insert({
-                name,
-                emoji: input.emoji ? String(input.emoji).trim().slice(0, 8) : '',
-                description,
-                imageUrl,
-            });
-        } catch (e) {
-            await removeFile(imageUrl);
-            throw e;
+        const name = String(input.name ?? '').trim();
+        if (!name) throw new AppError(400, 'Nom requis');
+        if (name.length > 120) throw new AppError(400, 'Nom trop long');
+        const description = input.description ? String(input.description).trim() : null;
+        if (description && description.length > 500) {
+            throw new AppError(400, 'Description trop longue');
         }
+        return giftRepository.insert({
+            name,
+            emoji: input.emoji ? String(input.emoji).trim().slice(0, 8) : '',
+            description,
+            image: file ? { data: file.buffer, type: file.mimetype } : null,
+        });
+    },
+
+    async updateDescription(id: unknown, description: unknown): Promise<AdminGift> {
+        const text = description == null ? '' : String(description).trim();
+        if (text.length > 500) throw new AppError(400, 'Description trop longue');
+        const gift = await giftRepository.updateDescription(checkId(id), text || null);
+        if (!gift) throw new AppError(404, 'Cadeau introuvable');
+        return gift;
     },
 
     async claim(id: unknown, token: unknown): Promise<void> {
@@ -68,15 +67,7 @@ export const giftService = {
     },
 
     async remove(id: unknown): Promise<void> {
-        const deleted = await giftRepository.deleteById(checkId(id));
-        if (!deleted) throw new AppError(404, 'Cadeau introuvable');
-        await removeFile(deleted.imageUrl);
-    },
-    async updateDescription(id: unknown, description: unknown): Promise<AdminGift> {
-        const text = description == null ? '' : String(description).trim();
-        if (text.length > 500) throw new AppError(400, 'Description trop longue');
-        const gift = await giftRepository.updateDescription(checkId(id), text || null);
-        if (!gift) throw new AppError(404, 'Cadeau introuvable');
-        return gift;
+        const ok = await giftRepository.deleteById(checkId(id));
+        if (!ok) throw new AppError(404, 'Cadeau introuvable');
     },
 };
