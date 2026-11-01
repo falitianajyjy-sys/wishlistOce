@@ -605,3 +605,8 @@ input[type='file']:hover::file-selector-button { filter: brightness(1.07); }
     object-fit: contain;
     background: #f2f8fd;
 }
+/* Invitation sans lieu : 2 colonnes */
+.cover-info {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 420px;
+}
