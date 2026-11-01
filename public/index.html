@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Invitation — Anniversaire de Océane</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<main>
+    <div class="stage" id="stage">
+
+        <!-- Carte d'invitation (couverture) -->
+        <section class="cover" id="cover">
+            <span class="kiss k1">💋</span>
+            <span class="kiss k2">💋</span>
+            <span class="kiss k3">💋</span>
+
+            <p class="cover-hi">Tu es invité(e) à fêter</p>
+            <h2 class="cover-title">L’anniversaire<br>de Océane</h2>
+
+            <div class="photo-wrap">
+                <span class="heart ha">💙</span>
+                <span class="heart hb">🤍</span>
+                <span class="heart hc">🩵</span>
+                <span class="heart hd">💙</span>
+                <span class="heart he">🤍</span>
+                <div class="photo-slot">
+                    <div class="photo-in">
+                        <span>📷 Ta photo ici</span>
+                        <img src="/invite.jpg" alt="" onerror="this.remove()">
+                    </div>
+                </div>
+            </div>
+
+            <div class="cover-info">
+                <div class="info-col"><b>QUAND ?</b><span>22 Novembre</span></div>
+                <div class="info-col"><b>HEURE ?</b><span>11:00 AM</span></div>
+                <div class="info-col"><b>OÙ ?</b><span>Lieu à compléter</span></div>
+            </div>
+
+            <button id="openCard">🎁 Trouver un cadeau</button>
+
+        </section>
+
+        <!-- Intérieur de la carte : la wishlist -->
+        <section class="inside" id="inside">
+            <h1>Wishlist de Océane</h1>
+
+            <p class="sub">Choisis un cadeau à m’offrir. Une fois pris, il disparaît de la liste pour les autres.</p>
+            <p class="nb"><b>NB :</b> Les cadeaux ne doivent pas forcément être identiques aux photos.</p>
+            <div id="mine"></div>
+            <div id="free"></div>
+        </section>
+
+    </div>
+</main>
+<div id="toast"></div>
+<script src="/common.js"></script>
+<script src="/app.js"></script>
+</body>
+</html>

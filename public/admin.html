@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Admin — Wishlist</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<main>
+    <h1>🔧 Ma liste</h1>
+    <div class="box" id="login">
+        <div class="m">Jeton admin</div>
+        <div class="row">
+            <input id="tok" type="password" placeholder="Colle ton ADMIN_TOKEN">
+            <button id="ok">Entrer</button>
+        </div>
+    </div>
+    <div id="panel" hidden>
+        <div class="box">
+            <div class="t">Ajouter un cadeau</div>
+            <div class="row">
+                <input id="ge" placeholder="Emoji" maxlength="4" style="flex:0 0 80px">
+                <input id="gn" placeholder="Nom du cadeau">
+            </div>
+            <div class="row"><input id="gd" placeholder="Description (optionnel)"></div>
+            <div class="row">
+                <input id="gi" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
+            </div>
+            <div class="m" style="margin-bottom:8px">Photo optionnelle · 5 Mo maximum</div>
+            <button id="add">Ajouter</button>
+        </div>
+        <h2 id="count"></h2>
+        <div id="list"></div>
+        <p class="note">Pour garder la surprise, tu ne vois pas qui a réservé quoi.</p>
+    </div>
+</main>
+<div id="toast"></div>
+<script src="/common.js"></script>
+<script src="/admin.js"></script>
+</body>
+</html>
